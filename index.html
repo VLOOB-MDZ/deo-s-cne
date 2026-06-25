@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Deo's Coffee &amp; Eatery | Racikan Berkelas</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    #nav-drawer { transform: translateX(-100%); transition: transform 0.3s ease-in-out; }
+    #nav-drawer.open { transform: translateX(0); }
+    .drawer-overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease-in-out; }
+    .drawer-overlay.open { opacity: 1; pointer-events: auto; }
+    [data-view] { display: none; }
+    [data-view].active { display: block; }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .fade-in { opacity: 0; transform: translateY(16px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); }
+    input[type="time"]::-webkit-calendar-picker-indicator { filter: invert(1); }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.85) translateY(24px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .pop-in { animation: popIn 0.45s cubic-bezier(0.34,1.56,0.64,1) both; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin { animation: spin 0.8s linear infinite; }
+  </style>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface":                  "#fff8f6",
+            "surface-dim":              "#e9d6d1",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low":    "#fff1ed",
+            "surface-container":        "#feeae4",
+            "surface-container-high":   "#f8e4df",
+            "surface-container-highest":"#f2ded9",
+            "surface-variant":          "#f2ded9",
+            "on-surface":               "#231916",
+            "on-surface-variant":       "#504442",
+            "inverse-surface":          "#392e2b",
+            "inverse-on-surface":       "#ffede8",
+            "outline":                  "#827472",
+            "outline-variant":          "#d3c3c0",
+            "surface-tint":             "#745853",
+            "primary":                  "#271310",
+            "on-primary":               "#ffffff",
+            "primary-container":        "#3e2723",
+            "on-primary-container":     "#ae8d87",
+            "inverse-primary":          "#e3beb8",
+            "primary-fixed":            "#ffdad4",
+            "primary-fixed-dim":        "#e3beb8",
+            "on-primary-fixed":         "#2b1613",
+            "on-primary-fixed-variant": "#5b403c",
+            "secondary":                "#5f5e5b",
+            "on-secondary":             "#ffffff",
+            "secondary-container":      "#e5e2dd",
+            "on-secondary-container":   "#656461",
+            "tertiary":                 "#111b03",
+            "on-tertiary":              "#ffffff",
+            "tertiary-container":       "#253014",
+            "on-tertiary-container":    "#8b9973",
+            "tertiary-fixed":           "#dae8be",
+            "tertiary-fixed-dim":       "#becca3",
+            "on-tertiary-fixed":        "#141f05",
+            "background":               "#fff8f6",
+            "on-background":            "#231916",
+            "error":                    "#ba1a1a",
+            "on-error":                 "#ffffff",
+          },
+          borderRadius: {
+            "DEFAULT": "0.125rem",
+            "lg":      "0.25rem",
+            "xl":      "0.5rem",
+            "full":    "9999px"
+          },
+          spacing: {
+            "base":          "8px",
+            "gutter":        "24px",
+            "margin-mobile": "20px",
+            "margin-desktop":"64px",
+            "container-max": "1200px"
+          },
+          fontFamily: {
+            "display-lg":        ["Playfair Display", "serif"],
+            "headline-md":       ["Playfair Display", "serif"],
+            "headline-sm":       ["Playfair Display", "serif"],
+            "display-lg-mobile": ["Playfair Display", "serif"],
+            "body-lg":           ["Inter", "sans-serif"],
+            "body-md":           ["Inter", "sans-serif"],
+            "label-sm":          ["Inter", "sans-serif"]
+          },
+          fontSize: {
+            "display-lg":        ["48px", {lineHeight:"1.1", letterSpacing:"-0.02em", fontWeight:"700"}],
+            "display-lg-mobile": ["36px", {lineHeight:"1.2", letterSpacing:"-0.01em", fontWeight:"700"}],
+            "headline-md":       ["32px", {lineHeight:"1.3", fontWeight:"600"}],
+            "headline-sm":       ["24px", {lineHeight:"1.4", fontWeight:"600"}],
+            "body-lg":           ["18px", {lineHeight:"1.6", fontWeight:"400"}],
+            "body-md":           ["16px", {lineHeight:"1.6", fontWeight:"400"}],
+            "label-sm":          ["12px", {lineHeight:"1",   letterSpacing:"0.08em", fontWeight:"600"}]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md overflow-x-hidden selection:bg-primary-fixed selection:text-on-primary-fixed">
+
+<!-- ── Drawer Overlay ── -->
+<div class="drawer-overlay fixed inset-0 bg-black/50 z-[60]" id="drawer-overlay" onclick="toggleNav()"></div>
+
+<!-- ── Navigation Drawer ── -->
+<nav class="fixed top-0 left-0 h-full w-[280px] bg-surface z-[70] shadow-2xl p-gutter flex flex-col" id="nav-drawer">
+  <div class="flex justify-between items-center mb-12">
+    <h2 class="font-display-lg text-headline-sm text-primary">Deo's</h2>
+    <span class="material-symbols-outlined cursor-pointer text-primary" onclick="toggleNav()">close</span>
+  </div>
+  <ul class="space-y-6">
+    <li><a class="block py-2 font-display-lg text-headline-sm text-primary" href="#" onclick="showView('landing'); toggleNav(); return false;">Beranda</a></li>
+    <li><a class="block py-2 font-display-lg text-headline-sm text-primary" href="#" onclick="showView('landing'); toggleNav(); setTimeout(()=>document.getElementById('tentang')?.scrollIntoView({behavior:'smooth'}),200); return false;">Tentang Kami</a></li>
+    <li><a class="block py-2 font-display-lg text-headline-sm text-primary" href="#" onclick="showView('menu'); toggleNav(); return false;">Menu</a></li>
+    <li><a class="block py-2 font-display-lg text-headline-sm text-primary" href="#" onclick="showView('landing'); toggleNav(); setTimeout(()=>document.getElementById('reservasi')?.scrollIntoView({behavior:'smooth'}),200); return false;">Reservasi</a></li>
+    <li><a class="block py-2 font-display-lg text-headline-sm text-primary" href="#" onclick="showView('landing'); toggleNav(); setTimeout(()=>document.getElementById('footer-landing')?.scrollIntoView({behavior:'smooth'}),200); return false;">Kontak</a></li>
+  </ul>
+  <div class="mt-auto pt-8 border-t border-outline-variant">
+    <p class="font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-4">Ikuti Kami</p>
+    <div class="flex gap-4">
+      <span class="material-symbols-outlined text-primary cursor-pointer">photo_camera</span>
+      <span class="material-symbols-outlined text-primary cursor-pointer">mail</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Fixed Header ── -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border-b border-outline-variant/30">
+  <div class="flex justify-between items-center h-16 px-margin-mobile max-w-container-max mx-auto">
+    <div class="flex items-center gap-3">
+      <span class="material-symbols-outlined text-primary cursor-pointer" onclick="toggleNav()">menu</span>
+      <h1 class="font-display-lg text-xl tracking-tighter text-primary cursor-pointer" onclick="showView('landing')">Deo's Coffee</h1>
+    </div>
+    <button
+      class="bg-primary text-on-primary px-4 py-2 font-label-sm text-[10px] tracking-widest uppercase active:scale-95 transition-transform duration-150"
+      onclick="showView('landing'); setTimeout(()=>document.getElementById('reservasi')?.scrollIntoView({behavior:'smooth'}),100)">
+      RESERVASI
+    </button>
+  </div>
+</header>
+
+
+<!-- ═══════════════════════════════════════════
+     VIEW: BERANDA (LANDING)
+════════════════════════════════════════════ -->
+<div data-view="landing" class="active">
+<main class="mt-16">
+
+  <!-- Hero -->
+  <section class="relative h-[85vh] flex items-center justify-center overflow-hidden">
+    <div class="absolute inset-0 z-0" style="background: radial-gradient(ellipse at 28% 52%, #6b4040 0%, #3e2723 42%, #1e0e0c 100%)">
+      <svg class="absolute inset-0 w-full h-full opacity-[0.18]" xmlns="http://www.w3.org/2000/svg">
+        <filter id="grain">
+          <feTurbulence type="fractalNoise" baseFrequency="0.68" numOctaves="3" stitchTiles="stitch"/>
+          <feColorMatrix type="saturate" values="0"/>
+        </filter>
+        <rect width="100%" height="100%" filter="url(#grain)"/>
+      </svg>
+      <div class="absolute inset-0" style="background: radial-gradient(ellipse at 50% 62%, rgba(116,88,83,0.28) 0%, transparent 58%)"></div>
+    </div>
+    <div class="relative z-10 text-center px-margin-mobile text-white w-full max-w-sm mx-auto">
+      <p class="font-label-sm text-label-sm uppercase tracking-widest mb-3 opacity-60 fade-in">Jakarta · Sejak 2019</p>
+      <h2 class="font-display-lg text-display-lg-mobile mb-4 fade-in">Deo's Coffee &amp; Eatery</h2>
+      <p class="font-body-md text-body-md mb-10 opacity-80 italic fade-in">Racikan berkelas untuk momen yang tenang</p>
+      <div class="flex flex-col gap-3 fade-in">
+        <button onclick="showView('menu')"
+          class="bg-white text-primary py-4 px-8 font-label-sm text-label-sm uppercase tracking-widest active:scale-95 transition-transform duration-150">
+          Lihat Menu
+        </button>
+        <button onclick="document.getElementById('reservasi').scrollIntoView({behavior:'smooth'})"
+          class="text-white py-4 px-8 font-label-sm text-label-sm uppercase tracking-widest active:scale-95 transition-transform duration-150"
+          style="border: 1px solid rgba(255,255,255,0.35);">
+          Pesan Meja
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Keunggulan -->
+  <section class="bg-surface-container-low py-16 px-margin-mobile border-b border-outline-variant/30">
+    <div class="flex flex-col gap-12 text-center">
+      <div class="flex flex-col items-center fade-in">
+        <span class="material-symbols-outlined text-primary text-4xl mb-3">coffee</span>
+        <h3 class="font-label-sm text-label-sm uppercase tracking-widest mb-1 text-primary">Biji Kopi Pilihan</h3>
+        <p class="text-secondary font-label-sm">Bersumber etis, dipanggang mikro</p>
+      </div>
+      <div class="flex flex-col items-center fade-in">
+        <span class="material-symbols-outlined text-primary text-4xl mb-3">potted_plant</span>
+        <h3 class="font-label-sm text-label-sm uppercase tracking-widest mb-1 text-primary">Suasana Tenang</h3>
+        <p class="text-secondary font-label-sm">Dirancang untuk kehadiran tanpa terburu-buru</p>
+      </div>
+      <div class="flex flex-col items-center fade-in">
+        <span class="material-symbols-outlined text-primary text-4xl mb-3">bakery_dining</span>
+        <h3 class="font-label-sm text-label-sm uppercase tracking-widest mb-1 text-primary">Pastri Segar Harian</h3>
+        <p class="text-secondary font-label-sm">Dibuat dengan tangan setiap fajar</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tentang Kami -->
+  <section id="tentang" class="py-16 px-margin-mobile bg-surface">
+    <div class="flex flex-col gap-8 fade-in">
+      <div class="h-64 w-full overflow-hidden">
+        <img alt="Caffe Latte Deo's" class="w-full h-full object-cover" src="images/latte.png"/>
+      </div>
+      <div class="space-y-4">
+        <h2 class="font-display-lg text-headline-md text-primary">Oase di Setiap Sesapan</h2>
+        <p class="text-secondary font-body-md leading-relaxed">
+          Di Deo's, kami percaya bahwa dunia bergerak terlalu cepat. Kedai kami didirikan atas prinsip "ritual tanpa terburu-buru". Setiap cangkir kopi adalah karya seni yang disengaja, dan setiap hidangan adalah eksplorasi tekstur dan rasa organik.
+        </p>
+        <p class="text-secondary font-body-md leading-relaxed">
+          Dari biji kopi pilihan hingga interior yang dirancang untuk ketenangan, kami menawarkan lebih dari sekadar asupan — kami menyediakan momen untuk jeda sejenak.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Menu Favorit -->
+  <section class="py-16 bg-surface-container-highest px-margin-mobile">
+    <div class="flex justify-between items-baseline mb-10">
+      <h2 class="font-display-lg text-headline-md text-primary fade-in">Menu Favorit</h2>
+      <a class="font-label-sm text-[10px] text-primary underline underline-offset-4 tracking-widest uppercase fade-in" href="#" onclick="showView('menu'); return false;">Lihat Semua</a>
+    </div>
+    <div class="flex flex-col gap-12">
+      <div class="flex flex-col gap-4 fade-in">
+        <div class="aspect-square overflow-hidden bg-surface-container">
+          <img alt="Lavender Latte" class="w-full h-full object-cover" src="images/latte.png"/>
+        </div>
+        <div>
+          <div class="flex justify-between items-baseline mb-1">
+            <h4 class="font-display-lg text-headline-sm text-primary">Lavender Latte</h4>
+            <span class="font-body-md text-primary">65rb</span>
+          </div>
+          <p class="text-secondary font-body-md mb-2 italic">Susu oat, vanila Madagaskar buatan sendiri, double-shot espresso.</p>
+          <span class="bg-[#A3B18A]/20 text-[#3E2723] px-3 py-1 text-[10px] font-label-sm rounded-full uppercase tracking-tighter">Vegan</span>
+        </div>
+      </div>
+      <div class="flex flex-col gap-4 fade-in">
+        <div class="aspect-square overflow-hidden bg-surface-container">
+          <img alt="Artisan Croissant" class="w-full h-full object-cover" src="images/croissant.png"/>
+        </div>
+        <div>
+          <div class="flex justify-between items-baseline mb-1">
+            <h4 class="font-display-lg text-headline-sm text-primary">Artisan Croissant</h4>
+            <span class="font-body-md text-primary">48rb</span>
+          </div>
+          <p class="text-secondary font-body-md italic">Adonan fermentasi 72 jam, mentega Prancis, garam laut.</p>
+        </div>
+      </div>
+      <div class="flex flex-col gap-4 fade-in">
+        <div class="aspect-square overflow-hidden bg-surface-container">
+          <img alt="Sourdough Tartine" class="w-full h-full object-cover" src="images/tartine.png"/>
+        </div>
+        <div>
+          <div class="flex justify-between items-baseline mb-1">
+            <h4 class="font-display-lg text-headline-sm text-primary">Sourdough Tartine</h4>
+            <span class="font-body-md text-primary">140rb</span>
+          </div>
+          <p class="text-secondary font-body-md mb-2 italic">Alpukat hancur, lobak heirloom, sayuran mikro, madu cabai.</p>
+          <span class="bg-[#A3B18A]/20 text-[#3E2723] px-3 py-1 text-[10px] font-label-sm rounded-full uppercase tracking-tighter">Vegetarian</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reservasi -->
+  <section id="reservasi" class="py-16 bg-primary text-on-primary px-margin-mobile">
+    <div class="text-center mb-10 fade-in">
+      <h2 class="font-display-lg text-headline-md mb-2">Pesan Momen Anda</h2>
+      <p class="font-body-md opacity-70">Pastikan meja Anda untuk pagi yang tenang atau makan siang yang dikurasi.</p>
+    </div>
+    <form class="space-y-6 fade-in" onsubmit="return false;">
+      <div>
+        <label class="block font-label-sm text-[10px] uppercase tracking-widest mb-2 opacity-60">Nama Lengkap</label>
+        <input class="w-full bg-transparent py-3 text-white outline-none placeholder:opacity-30"
+          style="border:none; border-bottom:1px solid rgba(255,255,255,0.3); border-radius:0;"
+          placeholder="Masukkan nama anda" type="text"/>
+      </div>
+      <div class="flex flex-col gap-6">
+        <div>
+          <label class="block font-label-sm text-[10px] uppercase tracking-widest mb-2 opacity-60">Tanggal</label>
+          <input class="w-full bg-transparent py-3 text-white outline-none"
+            style="border:none; border-bottom:1px solid rgba(255,255,255,0.3); border-radius:0;" type="date"/>
+        </div>
+        <div>
+          <label class="block font-label-sm text-[10px] uppercase tracking-widest mb-2 opacity-60">Waktu</label>
+          <input class="w-full bg-transparent py-3 text-white outline-none"
+            style="border:none; border-bottom:1px solid rgba(255,255,255,0.3); border-radius:0;" type="time"/>
+        </div>
+      </div>
+      <div>
+        <label class="block font-label-sm text-[10px] uppercase tracking-widest mb-2 opacity-60">Jumlah Tamu</label>
+        <select class="w-full bg-transparent py-3 text-white outline-none appearance-none"
+          style="border:none; border-bottom:1px solid rgba(255,255,255,0.3); border-radius:0;">
+          <option class="text-primary bg-white">1 Orang</option>
+          <option class="text-primary bg-white">2 Orang</option>
+          <option class="text-primary bg-white">4 Orang</option>
+          <option class="text-primary bg-white">6+ Orang</option>
+        </select>
+      </div>
+      <button type="submit"
+        class="w-full bg-white text-primary py-5 font-label-sm text-label-sm uppercase tracking-widest active:scale-95 transition-transform duration-150 mt-4">
+        Konfirmasi Reservasi
+      </button>
+    </form>
+  </section>
+
+  <!-- Galeri -->
+  <section class="py-16 px-margin-mobile bg-surface">
+    <h2 class="font-display-lg text-headline-md text-center mb-10 text-primary fade-in">Momen Terabadikan</h2>
+    <div class="flex flex-col gap-2 fade-in">
+      <div class="aspect-square overflow-hidden">
+        <img alt="Iced Americano" class="w-full h-full object-cover" src="images/americano.png"/>
+      </div>
+      <div class="aspect-square overflow-hidden">
+        <img alt="Ceremonial Matcha" class="w-full h-full object-cover" src="images/matcha.png"/>
+      </div>
+      <div class="aspect-[4/3] overflow-hidden">
+        <img alt="Cold Brew Reserve" class="w-full h-full object-cover" src="images/coldbrew.png"/>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer id="footer-landing" class="bg-surface-container-highest border-t border-outline-variant">
+  <div class="flex flex-col gap-10 py-16 px-margin-mobile">
+    <div class="space-y-3">
+      <h2 class="font-display-lg text-headline-sm text-primary">Deo's</h2>
+      <p class="font-body-md text-secondary leading-relaxed">Menyempurnakan seni ritual harian melalui kopi, kuliner, dan ketenangan.</p>
+    </div>
+    <div class="grid grid-cols-1 gap-8">
+      <div>
+        <h4 class="font-label-sm text-[10px] uppercase tracking-widest mb-4 opacity-60">Kunjungi Kami</h4>
+        <ul class="space-y-3 font-body-md text-secondary">
+          <li>Jl. Senopati No. 12, Jakarta</li>
+          <li>Setiap Hari: 08.00 – 21.00</li>
+          <li><a href="#" class="text-primary underline underline-offset-4">Petunjuk Arah</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-label-sm text-[10px] uppercase tracking-widest mb-4 opacity-60">Kontak</h4>
+        <ul class="space-y-3 font-body-md text-secondary">
+          <li>+62 21 555 0123</li>
+          <li>hello@deoscoffee.com</li>
+          <li>WhatsApp</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-label-sm text-[10px] uppercase tracking-widest mb-4 opacity-60">Ikuti Kami</h4>
+        <ul class="space-y-3 font-body-md text-secondary">
+          <li>Instagram</li>
+          <li>Newsletter</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="px-margin-mobile pb-8 border-t border-outline-variant">
+    <p class="font-label-sm text-[10px] text-secondary/60 pt-8">© 2024 Deo's Coffee &amp; Eatery. Hak Cipta Dilindungi.</p>
+  </div>
+</footer>
+</div><!-- /landing view -->
+
+
+<!-- ═══════════════════════════════════════════
+     VIEW: CHECK-IN
+════════════════════════════════════════════ -->
+<div data-view="checkin">
+<div class="min-h-screen flex flex-col relative overflow-hidden" style="background: radial-gradient(ellipse at 20% 80%, #5c3520 0%, #2e1810 45%, #120806 100%);">
+
+  <!-- Grain texture -->
+  <div class="absolute inset-0 pointer-events-none opacity-[0.18]" aria-hidden="true">
+    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <filter id="ci-grain"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+      <rect width="100%" height="100%" filter="url(#ci-grain)" opacity="0.4"/>
+    </svg>
+  </div>
+
+  <!-- Back to landing -->
+  <div class="relative pt-14 px-gutter">
+    <button onclick="showView('landing')" class="flex items-center gap-1 text-white/40 active:opacity-50 transition-opacity">
+      <span class="material-symbols-outlined" style="font-size:18px;">arrow_back</span>
+      <span class="font-label-sm text-[10px] uppercase tracking-widest">Kembali</span>
+    </button>
+  </div>
+
+  <!-- Main content -->
+  <div class="relative flex flex-col flex-1 px-gutter pt-10 pb-10">
+
+    <!-- Welcome heading -->
+    <div class="mb-12">
+      <p class="font-label-sm text-[10px] uppercase tracking-[0.25em] text-white/30 mb-4">Deo's Coffee &amp; Eatery</p>
+      <h1 class="font-display-lg leading-[1.1] tracking-[-0.03em] text-white mb-3" style="font-size: clamp(2.2rem, 8vw, 3rem);">Siapa nama<br>kamu?</h1>
+      <p class="font-body-md text-white/40 text-sm">Isi detail untuk mulai memesan.</p>
+    </div>
+
+    <!-- Name field -->
+    <div class="mb-10">
+      <label class="block font-label-sm text-[10px] uppercase tracking-widest mb-3 text-white/40">Nama</label>
+      <input id="checkin-name" type="text" placeholder="Nama atau panggilan" autocomplete="given-name"
+        class="w-full bg-transparent py-3 font-body-md text-white placeholder:text-white/20 outline-none"
+        style="border:none; border-bottom: 1.5px solid rgba(255,255,255,0.18); border-radius:0; font-size:1.125rem;"/>
+      <p id="checkin-name-error" class="text-[11px] mt-2 hidden" style="color:#f87171;">Nama diperlukan untuk melanjutkan.</p>
+    </div>
+
+    <!-- Order type toggle -->
+    <div class="mb-8">
+      <label class="block font-label-sm text-[10px] uppercase tracking-widest mb-3 text-white/40">Tipe Kunjungan</label>
+      <div class="flex gap-2">
+        <button id="ci-btn-dinein" onclick="setCheckinType('dine-in')"
+          class="flex-1 py-3.5 font-label-sm text-[10px] uppercase tracking-widest transition-colors duration-200"
+          style="background:white; color:#271310; border:1.5px solid white; border-radius:0.5rem;">
+          Dine-In
+        </button>
+        <button id="ci-btn-takeaway" onclick="setCheckinType('takeaway')"
+          class="flex-1 py-3.5 font-label-sm text-[10px] uppercase tracking-widest transition-colors duration-200"
+          style="background:transparent; color:rgba(255,255,255,0.5); border:1.5px solid rgba(255,255,255,0.18); border-radius:0.5rem;">
+          Takeaway
+        </button>
+      </div>
+    </div>
+
+    <!-- Table number (dine-in only) -->
+    <div id="checkin-table-field" class="mb-10">
+      <label class="block font-label-sm text-[10px] uppercase tracking-widest mb-3 text-white/40">Nomor Meja</label>
+      <input id="checkin-table" type="text" placeholder="Misal: Meja 3 / Area Outdoor"
+        class="w-full bg-transparent py-3 font-body-md text-white placeholder:text-white/20 outline-none"
+        style="border:none; border-bottom: 1.5px solid rgba(255,255,255,0.18); border-radius:0; font-size:1.125rem;"/>
+      <p id="checkin-table-error" class="text-[11px] mt-2 hidden" style="color:#f87171;">Nomor meja diperlukan untuk Dine-In.</p>
+    </div>
+
+    <div class="flex-1 min-h-[2rem]"></div>
+
+    <!-- Submit -->
+    <button id="checkin-submit-btn" onclick="startSession()"
+      class="w-full py-5 font-label-sm text-[11px] uppercase tracking-[0.15em] active:scale-[0.98] transition-transform duration-150"
+      style="background:white; color:#271310; border-radius:0.75rem; box-shadow: 0 12px 40px rgba(0,0,0,0.5);">
+      Mulai Memesan →
+    </button>
+
+  </div>
+</div>
+</div><!-- /checkin view -->
+
+
+<!-- ═══════════════════════════════════════════
+     VIEW: DAFTAR MENU
+════════════════════════════════════════════ -->
+<div data-view="menu">
+<main class="pt-16 pb-36">
+
+  <!-- Search -->
+  <section class="px-gutter pt-6 pb-2">
+    <div class="relative">
+      <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline" style="font-size:20px;">search</span>
+      <input id="menu-search"
+        class="w-full bg-surface-container-low py-3 pl-10 pr-4 font-body-md focus:outline-none placeholder:text-outline/50"
+        style="border:none; border-radius:0.75rem;"
+        placeholder="Cari menu kami..." type="text"/>
+    </div>
+  </section>
+
+  <!-- Navigasi Kategori -->
+  <nav id="category-nav" class="sticky top-16 z-40 bg-surface/95 backdrop-blur-sm border-b border-outline-variant/10 py-3 mb-6">
+    <div class="flex overflow-x-auto hide-scrollbar px-gutter space-x-8 items-center">
+      <button class="whitespace-nowrap font-label-sm text-label-sm text-secondary hover:text-primary pb-1 transition-colors duration-150"
+        data-category="kopi" data-title="Kopi Artisan" data-subtitle="Pilihan Kami">Kopi</button>
+      <button class="whitespace-nowrap font-label-sm text-label-sm text-secondary hover:text-primary pb-1 transition-colors duration-150"
+        data-category="non-kopi" data-title="Minuman Non-Kopi" data-subtitle="Alternatif Segar">Non-Kopi</button>
+      <button class="whitespace-nowrap font-label-sm text-label-sm text-secondary hover:text-primary pb-1 transition-colors duration-150"
+        data-category="pastry" data-title="Pastry &amp; Dessert" data-subtitle="Dari Dapur Kami">Pastry &amp; Dessert</button>
+      <button class="whitespace-nowrap font-label-sm text-label-sm text-secondary hover:text-primary pb-1 transition-colors duration-150"
+        data-category="makanan" data-title="Makanan Ringan" data-subtitle="Sajian Lengkap">Makanan Ringan</button>
+    </div>
+  </nav>
+
+  <!-- Session Bar -->
+  <div id="session-bar" class="hidden px-gutter py-2.5 items-center justify-between" style="background: rgba(39,19,16,0.04); border-bottom: 1px solid rgba(39,19,16,0.06);">
+    <div class="flex items-center gap-2">
+      <span class="material-symbols-outlined text-primary" style="font-size:16px; font-variation-settings:'FILL' 1;">person</span>
+      <span id="session-bar-text" class="font-body-md text-sm text-primary"></span>
+    </div>
+    <button onclick="changeSession()" class="font-label-sm text-[10px] uppercase tracking-widest text-secondary underline underline-offset-4 active:opacity-50 transition-opacity">Ubah</button>
+  </div>
+
+  <!-- Judul Seksi -->
+  <section class="px-gutter mb-8 mt-6">
+    <p class="font-label-sm text-label-sm uppercase tracking-widest text-secondary mb-1" id="menu-subtitle">Pilihan Kami</p>
+    <h2 class="font-display-lg-mobile text-display-lg-mobile text-primary" id="menu-title">Kopi Artisan</h2>
+    <div class="w-12 h-[1px] bg-primary mt-4"></div>
+  </section>
+
+  <!-- Grid Menu -->
+  <section class="px-gutter">
+    <div class="grid grid-cols-2 gap-x-4 gap-y-10" id="menu-grid">
+
+      <!-- ── Kopi ── -->
+      <div class="flex flex-col group" data-category="kopi" data-name="Deo's Signature Latte" data-price="55000" data-img="images/latte.png">
+        <div class="relative aspect-[4/5] mb-3 overflow-hidden bg-surface-container rounded-sm">
+          <img alt="Deo's Signature Latte" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="images/latte.png"/>
+          <div class="absolute top-2 left-2 bg-tertiary-fixed/90 px-2 py-0.5 rounded-full">
+            <span class="font-label-sm text-[10px] text-on-tertiary-fixed uppercase">Terlaris</span>
+          </div>
+        </div>
+        <div class="flex flex-col gap-0.5">
+          <div class="flex justify-between items-start">
+            <h3 class="font-headline-sm text-body-md text-primary leading-tight pr-2">Deo's Signature Latte</h3>
+            <span class="font-label-sm text-label-sm text-primary shrink-0">55rb</span>
+          </div>
+          <p class="font-body-md text-[13px] text-secondary leading-tight opacity-80">House blend dengan susu oat rasa vanilla.</p>
+          <button class="add-to-cart-btn mt-2 w-full bg-primary text-on-primary py-2 font-label-sm text-[10px] uppercase tracking-widest active:scale-95 transition-transform duration-150">+ Tambah</button>
+        </div>
+      </div>
+
+      <div class="flex flex-col group" data-category="kopi" data-name="Iced Americano" data-price="40000" data-img="images/americano.png">
+        <div class="relative aspect-[4/5] mb-3 overflow-hidden bg-surface-container rounded-sm">
+          <img alt="Iced Americano" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="images/americano.png"/>
+        </div>
+        <div class="flex flex-col gap-0.5">
+          <div class="flex justify-between items-start">
+            <h3 class="font-headline-sm text-body-md text-primary leading-tight pr-2">Iced Americano</h3>
+            <span class="font-label-sm text-label-sm text-primary shrink-0">40rb</span>
+          </div>
+          <p class="font-body-md text-[13px] text-secondary leading-tight opacity-80">Double shot espresso di atas es kristal.</p>
+          <button class="add-to-cart-btn mt-2 w-full bg-primary text-on-primary py-2 font-label-sm text-[10px] uppercase tracking-widest active:scale-95 transition-transform duration-150">+ Tambah</button>
+        </div>
+      </div>
+
+      <div class="flex flex-col group" data-category="kopi" data-name="Cold Brew Reserve" data-price="60000" data-img="images/coldbrew.png">
+        <div class="relative aspect-[4/5] mb-3 overflow-hidden bg-surface-container rounded-sm">
+          <img alt="Cold Brew Reserve" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="images/coldbrew.png"/>
+        </div>
+        <div class="flex flex-col gap-0.5">
+          <div class="flex justify-between items-start">
+            <h3 class="font-headline-sm text-body-md text-primary leading-tight pr-2">Cold Brew Reserve</h3>
+            <span class="font-label-sm text-label-sm text-primary shrink-0">60rb</span>
+          </div>
+          <p class="font-body-md text-[13px] text-secondary leading-tight opacity-80">Proses rendam 18 jam, aroma kakao &amp; berry.</p>
+          <button class="add-to-cart-btn mt-2 w-full bg-primary text-on-primary py-2 font-label-sm text-[10px] uppercase tracking-widest active:scale-95 transition-transform duration-150">+ Tambah</button>
+        </div>
+      </div>
+
+      <!-- ── Non-Kopi ── -->
+      <div class="flex flex-col group" data-category="non-kopi" data-name="Ceremonial Matcha" data-price="58000" data-img="images/matcha.png">
+        <div class="relative aspect-[4/5] mb-3 overflow-hidden bg-surface-container rounded-sm">
+          <img alt="Ceremonial Matcha" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="images/matcha.png"/>
+          <div class="absolute top-2 left-2 bg-primary-container px-2 py-0.5 rounded-full">
+            <span class="font-label-sm text-[10px] text-primary-fixed uppercase">Baru</span>
+          </div>
+        </div>
+        <div class="flex flex-col gap-0.5">
+          <div class="flex justify-between items-start">
+            <h3 class="font-headline-sm text-body-md text-primary leading-tight pr-2">Ceremonial Matcha</h3>
+            <span class="font-label-sm text-label-sm text-primary shrink-0">58rb</span>
+          </div>
+          <p class="font-body-md text-[13px] text-secondary leading-tight opacity-80">Matcha premium Uji yang dikocok sempurna.</p>
+          <button class="add-to-cart-btn mt-2 w-full bg-primary text-on-primary py-2 font-label-sm text-[10px] uppercase tracking-widest active:scale-95 transition-transform duration-150">+ Tambah</button>
+        </div>
+      </div>
+
+      <!-- ── Pastry ── -->
+      <div class="flex flex-col group" data-category="pastry" data-name="Pistachio Croissant" data-price="65000" data-img="images/croissant.png">
+        <div class="relative aspect-[4/5] mb-3 overflow-hidden bg-surface-container rounded-sm">
+          <img alt="Pistachio Croissant" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="images/croissant.png"/>
+          <div class="absolute top-2 left-2 bg-primary-container px-2 py-0.5 rounded-full">
+            <span class="font-label-sm text-[10px] text-primary-fixed uppercase">Baru</span>
+          </div>
+        </div>
+        <div class="flex flex-col gap-0.5">
+          <div class="flex justify-between items-start">
+            <h3 class="font-headline-sm text-body-md text-primary leading-tight pr-2">Pistachio Croissant</h3>
+            <span class="font-label-sm text-label-sm text-primary shrink-0">65rb</span>
+          </div>
+          <p class="font-body-md text-[13px] text-secondary leading-tight opacity-80">Twice-baked dengan krim pistachio buatan tangan.</p>
+          <button class="add-to-cart-btn mt-2 w-full bg-primary text-on-primary py-2 font-label-sm text-[10px] uppercase tracking-widest active:scale-95 transition-transform duration-150">+ Tambah</button>
+        </div>
+      </div>
+
+      <!-- ── Makanan Ringan ── -->
+      <div class="flex flex-col group" data-category="makanan" data-name="Avocado Sourdough" data-price="120000" data-img="images/tartine.png">
+        <div class="relative aspect-[4/5] mb-3 overflow-hidden bg-surface-container rounded-sm">
+          <img alt="Avocado Sourdough" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="images/tartine.png"/>
+        </div>
+        <div class="flex flex-col gap-0.5">
+          <div class="flex justify-between items-start">
+            <h3 class="font-headline-sm text-body-md text-primary leading-tight pr-2">Avocado Sourdough</h3>
+            <span class="font-label-sm text-label-sm text-primary shrink-0">120rb</span>
+          </div>
+          <p class="font-body-md text-[13px] text-secondary leading-tight opacity-80">Whipped feta, cabai kering, &amp; microgreens.</p>
+          <button class="add-to-cart-btn mt-2 w-full bg-primary text-on-primary py-2 font-label-sm text-[10px] uppercase tracking-widest active:scale-95 transition-transform duration-150">+ Tambah</button>
+        </div>
+      </div>
+
+      <div class="flex flex-col group" data-category="makanan" data-name="Shakshuka" data-price="95000" data-img="images/shakshuka.png">
+        <div class="relative aspect-[4/5] mb-3 overflow-hidden bg-surface-container rounded-sm">
+          <img alt="Shakshuka" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="images/shakshuka.png"/>
+          <div class="absolute top-2 left-2 bg-tertiary-fixed/90 px-2 py-0.5 rounded-full">
+            <span class="font-label-sm text-[10px] text-on-tertiary-fixed uppercase">Terlaris</span>
+          </div>
+        </div>
+        <div class="flex flex-col gap-0.5">
+          <div class="flex justify-between items-start">
+            <h3 class="font-headline-sm text-body-md text-primary leading-tight pr-2">Shakshuka</h3>
+            <span class="font-label-sm text-label-sm text-primary shrink-0">95rb</span>
+          </div>
+          <p class="font-body-md text-[13px] text-secondary leading-tight opacity-80">Telur dalam saus tomat pedas, feta, &amp; roti panggang.</p>
+          <button class="add-to-cart-btn mt-2 w-full bg-primary text-on-primary py-2 font-label-sm text-[10px] uppercase tracking-widest active:scale-95 transition-transform duration-150">+ Tambah</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Banner Promo -->
+  <section class="px-gutter mt-16">
+    <div class="bg-primary-container p-8 relative overflow-hidden rounded-sm">
+      <div class="relative z-10">
+        <p class="font-label-sm text-label-sm text-primary-fixed uppercase tracking-widest mb-2">Spesial Member</p>
+        <h3 class="font-display-lg text-headline-md text-on-primary mb-4">Bergabunglah dengan Coffee Circle kami.</h3>
+        <button class="bg-surface text-primary font-label-sm text-label-sm py-3 px-6 uppercase tracking-wider active:scale-95 transition-transform duration-150">
+          Pelajari Lebih Lanjut
+        </button>
+      </div>
+      <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
+        <span class="material-symbols-outlined text-surface" style="font-size:120px;">local_cafe</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="bg-surface-container-highest border-t border-outline-variant">
+  <div class="flex flex-col gap-gutter py-12 px-gutter max-w-container-max mx-auto">
+    <div class="text-center mb-2">
+      <h2 class="font-display-lg text-headline-sm text-primary mb-3">Deo's</h2>
+      <p class="font-body-md text-secondary">Pengalaman kopi kurasi di jantung kota. Ketenangan yang disajikan setiap hari.</p>
+    </div>
+    <div class="flex flex-col items-center gap-3">
+      <h4 class="font-label-sm text-label-sm text-on-surface uppercase tracking-widest">Hubungi Kami</h4>
+      <div class="flex gap-6">
+        <a class="text-secondary hover:text-primary transition-colors font-body-md" href="#">Instagram</a>
+        <a class="text-secondary hover:text-primary transition-colors font-body-md" href="#">WhatsApp</a>
+        <a class="text-secondary hover:text-primary transition-colors font-body-md" href="#">Newsletter</a>
+      </div>
+    </div>
+    <div class="flex flex-col items-center gap-2 text-center">
+      <h4 class="font-label-sm text-label-sm text-on-surface uppercase tracking-widest mb-1">Kunjungi</h4>
+      <span class="text-secondary font-body-md">Jl. Espresso No. 123</span>
+      <span class="text-secondary font-body-md">Sen–Min: 07:00 – 21:00</span>
+      <a class="text-primary underline font-body-md" href="#">Lihat di Peta</a>
+    </div>
+    <div class="pt-8 border-t border-outline-variant/30 text-center">
+      <p class="font-label-sm text-label-sm text-secondary/60">© 2024 Deo's Coffee &amp; Eatery. Seluruh hak cipta dilindungi.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ── Floating Cart Bar (menu view only) ── -->
+<div class="fixed bottom-0 left-0 w-full p-4 z-[60] bg-gradient-to-t from-surface via-surface/80 to-transparent pointer-events-none">
+  <button id="cart-bar" onclick="showView('checkout')"
+    class="hidden w-full items-center justify-between bg-primary text-on-primary px-6 py-4 rounded-xl active:scale-[0.98] transition-transform duration-150 pointer-events-auto"
+    style="box-shadow: 0 8px 24px rgba(39,19,16,0.45);">
+    <div class="flex items-center gap-3">
+      <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">shopping_bag</span>
+      <span id="cart-count-label" class="font-label-sm text-label-sm uppercase tracking-wider">0 Item</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span id="cart-total-label" class="font-body-md font-semibold">Rp 0</span>
+      <span class="material-symbols-outlined opacity-70" style="font-size:18px;">chevron_right</span>
+    </div>
+  </button>
+</div>
+
+</div><!-- /menu view -->
+
+
+<!-- ═══════════════════════════════════════════
+     GLOBAL: TRACKING BAR (semua view kecuali tracking)
+════════════════════════════════════════════ -->
+<div id="tracking-bar" class="fixed bottom-0 left-0 w-full z-[59] hidden" style="border-top: 2px solid #d97706;">
+  <button onclick="showView('tracking')"
+    class="w-full flex items-center gap-3 px-5 py-3 bg-primary text-on-primary active:opacity-80 transition-opacity"
+    style="box-shadow: 0 -1px 6px rgba(39,19,16,0.15);">
+    <span id="tracking-bar-dot" class="w-2 h-2 rounded-full shrink-0 block" style="background:#d97706;"></span>
+    <div class="flex flex-col items-start text-left flex-1">
+      <span id="tracking-bar-status" class="font-label-sm text-[10px] uppercase tracking-widest text-on-primary/60">Status Pesanan</span>
+      <span id="tracking-bar-text" class="font-body-md text-sm text-on-primary leading-tight">Memuat...</span>
+    </div>
+    <span class="material-symbols-outlined opacity-50 shrink-0" style="font-size:18px;">chevron_right</span>
+  </button>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     VIEW: TRACKING
+════════════════════════════════════════════ -->
+<div data-view="tracking">
+<main class="pt-16 pb-8 min-h-screen bg-surface">
+
+  <!-- Header -->
+  <div class="sticky top-16 z-40 bg-surface border-b border-outline-variant/30 px-gutter py-4 flex items-center gap-4">
+    <button onclick="showView('menu')" class="flex items-center text-primary active:opacity-50 transition-opacity">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+    <h2 class="font-display-lg text-headline-sm text-primary">Status Pesanan</h2>
+  </div>
+
+  <!-- Order Info -->
+  <section class="px-gutter pt-8 pb-4">
+    <p id="track-order-id" class="font-label-sm text-[10px] text-secondary uppercase tracking-widest mb-1">Order #——</p>
+    <h3 id="track-customer-name" class="font-display-lg text-headline-sm text-primary mb-1">—</h3>
+    <p id="track-order-type" class="font-body-md text-sm text-secondary">—</p>
+  </section>
+
+  <!-- Progress Steps -->
+  <section class="px-gutter py-6">
+    <div class="flex items-center">
+
+      <div class="flex flex-col items-center">
+        <div id="step-pending" class="w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-500" style="background:#d97706;">
+          <span class="material-symbols-outlined text-white" style="font-size:16px;font-variation-settings:'FILL' 1;">schedule</span>
+        </div>
+        <span class="font-label-sm text-[9px] uppercase tracking-wider mt-2 text-secondary text-center w-16">Menunggu</span>
+      </div>
+
+      <div id="line-1" class="flex-1 h-0.5 mb-5 transition-colors duration-500" style="background:#3a2418;"></div>
+
+      <div class="flex flex-col items-center">
+        <div id="step-processing" class="w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-500" style="background:#3a2418;">
+          <span class="material-symbols-outlined text-white/30" style="font-size:16px;font-variation-settings:'FILL' 1;">restaurant</span>
+        </div>
+        <span class="font-label-sm text-[9px] uppercase tracking-wider mt-2 text-secondary text-center w-16">Diproses</span>
+      </div>
+
+      <div id="line-2" class="flex-1 h-0.5 mb-5 transition-colors duration-500" style="background:#3a2418;"></div>
+
+      <div class="flex flex-col items-center">
+        <div id="step-done" class="w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-500" style="background:#3a2418;">
+          <span class="material-symbols-outlined text-white/30" style="font-size:16px;font-variation-settings:'FILL' 1;">dining</span>
+        </div>
+        <span class="font-label-sm text-[9px] uppercase tracking-wider mt-2 text-secondary text-center w-16">Dihidangkan</span>
+      </div>
+
+      <div id="line-3" class="flex-1 h-0.5 mb-5 transition-colors duration-500" style="background:#3a2418;"></div>
+
+      <div class="flex flex-col items-center">
+        <div id="step-paid" class="w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-500" style="background:#3a2418;">
+          <span class="material-symbols-outlined text-white/30" style="font-size:16px;font-variation-settings:'FILL' 1;">check_circle</span>
+        </div>
+        <span class="font-label-sm text-[9px] uppercase tracking-wider mt-2 text-secondary text-center w-16">Selesai</span>
+      </div>
+
+    </div>
+
+    <!-- Status message -->
+    <div id="track-status-msg" class="mt-8 p-4 rounded-xl text-center" style="background: rgba(217,119,6,0.12); border: 1px solid rgba(217,119,6,0.3);">
+      <p id="track-status-text" class="font-body-md text-sm text-on-surface">Pesanan diterima, menunggu konfirmasi...</p>
+    </div>
+  </section>
+
+  <!-- Divider -->
+  <div class="h-2 bg-surface-container-low my-2"></div>
+
+  <!-- Items -->
+  <section class="px-gutter py-5">
+    <h4 class="font-label-sm text-[10px] uppercase tracking-widest text-secondary mb-4">Rincian Pesanan</h4>
+    <div id="track-items" class="space-y-3"></div>
+  </section>
+
+  <!-- Divider -->
+  <div class="h-px bg-outline-variant/30 mx-gutter"></div>
+
+  <!-- Total -->
+  <section class="px-gutter py-5">
+    <div class="flex justify-between items-center">
+      <span class="font-label-sm text-label-sm uppercase tracking-widest text-primary">Total</span>
+      <span id="track-total" class="font-display-lg text-headline-sm text-primary">Rp 0</span>
+    </div>
+  </section>
+
+  <!-- Notes -->
+  <section id="track-notes-section" class="px-gutter pb-4 hidden">
+    <p id="track-notes" class="font-body-md text-sm text-secondary italic"></p>
+  </section>
+
+  <!-- Done CTA -->
+  <section id="track-done-cta" class="px-gutter pt-4 pb-8 hidden">
+    <div class="bg-surface-container-low rounded-xl p-5 text-center">
+      <span class="material-symbols-outlined text-primary mb-2 block" style="font-size:36px;font-variation-settings:'FILL' 1;">check_circle</span>
+      <p class="font-display-lg text-headline-sm text-primary mb-1">Terima kasih!</p>
+      <p class="font-body-md text-sm text-secondary mb-4">Selamat menikmati hidangan Deo's</p>
+      <button onclick="clearTracking()"
+        class="bg-primary text-on-primary px-6 py-3 font-label-sm text-[10px] uppercase tracking-widest active:scale-95 transition-transform duration-150 rounded-lg">
+        Pesan Lagi
+      </button>
+    </div>
+  </section>
+
+</main>
+</div><!-- /tracking view -->
+
+
+<!-- ═══════════════════════════════════════════
+     VIEW: CHECKOUT
+════════════════════════════════════════════ -->
+<div data-view="checkout">
+<main class="pt-16 pb-40 min-h-screen bg-surface">
+
+  <!-- Header -->
+  <div class="sticky top-16 z-40 bg-surface border-b border-outline-variant/30 px-gutter py-4 flex items-center gap-4">
+    <button onclick="showView('menu')" class="flex items-center text-primary active:opacity-50 transition-opacity">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+    <h2 class="font-display-lg text-headline-sm text-primary">Keranjang</h2>
+    <span id="checkout-count-badge" class="ml-auto bg-primary text-on-primary font-label-sm text-[10px] px-2 py-0.5 rounded-full"></span>
+  </div>
+
+  <!-- Active Order Notice -->
+  <div id="existing-order-notice" class="hidden mx-gutter mt-5 rounded-xl p-4" style="background: rgba(39,19,16,0.06); border: 1px solid rgba(39,19,16,0.15);">
+    <div class="flex items-start gap-3">
+      <span class="material-symbols-outlined text-primary mt-0.5" style="font-size:20px;font-variation-settings:'FILL' 1;">receipt_long</span>
+      <div class="flex-1">
+        <p class="font-label-sm text-[10px] uppercase tracking-widest text-secondary mb-1">Menambah ke Pesanan Aktif</p>
+        <p id="existing-order-notice-text" class="font-body-md text-sm text-primary font-semibold"></p>
+        <p class="font-body-md text-[12px] text-secondary mt-0.5">Item baru akan digabung ke struk yang sama</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart Items -->
+  <section class="px-gutter pt-5">
+    <div id="checkout-items" class="space-y-1"></div>
+    <div id="checkout-empty" class="text-center py-20 hidden">
+      <span class="material-symbols-outlined text-outline mb-4 block" style="font-size:56px;">shopping_bag</span>
+      <p class="font-body-md text-secondary mb-4">Keranjang masih kosong</p>
+      <button onclick="showView('menu')" class="text-primary font-label-sm text-label-sm uppercase tracking-widest underline underline-offset-4">Kembali ke Menu</button>
+    </div>
+  </section>
+
+  <!-- Divider -->
+  <div class="h-2 bg-surface-container-low my-4"></div>
+
+  <!-- Detail Pesanan (session-based) -->
+  <section class="px-gutter py-5 space-y-6">
+    <h3 class="font-display-lg text-headline-sm text-primary">Detail Pesanan</h3>
+
+    <!-- Guest info card -->
+    <div class="flex items-center justify-between py-4" style="border-bottom: 1px solid rgba(39,19,16,0.12);">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style="background: rgba(39,19,16,0.07);">
+          <span class="material-symbols-outlined text-primary" style="font-size:18px; font-variation-settings:'FILL' 1;">person</span>
+        </div>
+        <div>
+          <p id="checkout-session-name" class="font-body-md text-sm text-primary font-semibold leading-tight"></p>
+          <p id="checkout-session-type" class="font-label-sm text-[11px] text-secondary mt-0.5"></p>
+        </div>
+      </div>
+      <button onclick="changeSession()" class="font-label-sm text-[10px] uppercase tracking-widest text-secondary underline underline-offset-4 active:opacity-50 transition-opacity">Ubah</button>
+    </div>
+
+  </section>
+
+  <!-- Summary -->
+  <div class="h-2 bg-surface-container-low my-4"></div>
+  <section class="px-gutter py-4">
+    <div class="flex justify-between items-center py-2">
+      <span class="font-body-md text-secondary">Subtotal</span>
+      <span id="summary-subtotal" class="font-body-md text-on-surface">Rp 0</span>
+    </div>
+    <div class="flex justify-between items-center py-3 border-t border-outline-variant/30 mt-1">
+      <span class="font-label-sm text-label-sm uppercase tracking-widest text-primary">Total</span>
+      <span id="summary-total" class="font-display-lg text-headline-sm text-primary">Rp 0</span>
+    </div>
+  </section>
+
+</main>
+
+<!-- Submit Button -->
+<div class="fixed bottom-0 left-0 w-full p-4 z-[60] bg-gradient-to-t from-surface via-surface/80 to-transparent pointer-events-none">
+  <button id="submit-order-btn" onclick="submitOrder()"
+    class="w-full flex items-center justify-center gap-3 bg-primary text-on-primary px-6 py-4 rounded-xl active:scale-[0.98] transition-transform duration-150 pointer-events-auto opacity-50"
+    style="box-shadow: 0 8px 24px rgba(39,19,16,0.35);" disabled>
+    <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">check_circle</span>
+    <span class="font-label-sm text-label-sm uppercase tracking-wider">Konfirmasi Pesanan</span>
+  </button>
+</div>
+
+<!-- Success Overlay -->
+<div id="order-success" class="fixed inset-0 z-[100] bg-primary flex flex-col items-center justify-center px-gutter text-center hidden">
+  <div class="pop-in">
+    <span class="material-symbols-outlined text-on-primary mb-6 block" style="font-size:72px; font-variation-settings:'FILL' 1;">check_circle</span>
+    <p class="font-label-sm text-label-sm text-on-primary/60 uppercase tracking-widest mb-2">Pesanan Diterima!</p>
+    <h2 class="font-display-lg text-headline-md text-on-primary mb-3">Sedang kami siapkan</h2>
+    <p id="success-order-id" class="font-body-md text-on-primary/50 mb-10 font-mono"></p>
+    <button onclick="clearCartAndGoMenu()"
+      class="bg-white text-primary py-4 px-10 font-label-sm text-label-sm uppercase tracking-widest active:scale-95 transition-transform duration-150">
+      Pesan Lagi
+    </button>
+  </div>
+</div>
+
+</div><!-- /checkout view -->
+
+
+<!-- ═══════════════════════════════════════════
+     ITEM NOTES BOTTOM SHEET
+════════════════════════════════════════════ -->
+<div id="item-sheet-overlay" class="fixed inset-0 z-[80] hidden" style="background:rgba(0,0,0,0.45);" onclick="closeItemSheet()"></div>
+<div id="item-sheet" class="fixed bottom-0 left-0 w-full z-[81] bg-surface rounded-t-3xl pt-3 pb-10 px-6"
+  style="transform:translateY(100%); transition:transform 0.32s cubic-bezier(0.32,0.72,0,1); box-shadow: 0 -8px 40px rgba(39,19,16,0.18);">
+  <!-- drag handle -->
+  <div class="w-10 h-1 rounded-full mx-auto mb-6" style="background:rgba(39,19,16,0.15);"></div>
+
+  <!-- Item info -->
+  <div class="flex gap-4 mb-6">
+    <img id="item-sheet-img" src="" alt="" class="w-16 h-16 object-cover rounded-lg shrink-0 bg-surface-container"/>
+    <div class="flex-1 min-w-0">
+      <h3 id="item-sheet-name" class="font-display-lg text-base text-primary leading-tight mb-1"></h3>
+      <p id="item-sheet-price" class="font-label-sm text-[11px] text-secondary"></p>
+    </div>
+  </div>
+
+  <!-- Notes input -->
+  <label class="block font-label-sm text-[10px] uppercase tracking-widest mb-2 text-secondary">Catatan untuk item ini</label>
+  <input id="item-sheet-notes" type="text" placeholder="Misal: tanpa gula, susu oat, extra shot..."
+    class="w-full bg-transparent py-3 text-on-surface outline-none placeholder:opacity-30"
+    style="border:none; border-bottom:1.5px solid #d3c3c0; border-radius:0; font-size:0.9375rem; margin-bottom:1.75rem;"/>
+
+  <!-- Confirm button -->
+  <button id="item-sheet-confirm" onclick="confirmAddToCart()"
+    class="w-full py-4 bg-primary text-on-primary font-label-sm text-[10px] uppercase tracking-[0.12em] rounded-xl active:scale-[0.98] transition-transform duration-150"
+    style="box-shadow: 0 6px 20px rgba(39,19,16,0.28);">
+    + Tambahkan ke Keranjang
+  </button>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════════════ -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script>
+/* ── Guest session (check-in) ── */
+var guestSession = null; // { name, orderType, tableNumber }
+var checkinType  = 'dine-in';
+
+function setCheckinType(type) {
+  checkinType = type;
+  var dineinBtn   = document.getElementById('ci-btn-dinein');
+  var takeawayBtn = document.getElementById('ci-btn-takeaway');
+  var tableField  = document.getElementById('checkin-table-field');
+  if (type === 'dine-in') {
+    dineinBtn.style.cssText   = 'background:white; color:#271310; border:1.5px solid white; border-radius:0.5rem; flex:1; padding-top:0.875rem; padding-bottom:0.875rem;';
+    takeawayBtn.style.cssText = 'background:transparent; color:rgba(255,255,255,0.5); border:1.5px solid rgba(255,255,255,0.18); border-radius:0.5rem; flex:1; padding-top:0.875rem; padding-bottom:0.875rem;';
+    tableField.classList.remove('hidden');
+  } else {
+    takeawayBtn.style.cssText = 'background:white; color:#271310; border:1.5px solid white; border-radius:0.5rem; flex:1; padding-top:0.875rem; padding-bottom:0.875rem;';
+    dineinBtn.style.cssText   = 'background:transparent; color:rgba(255,255,255,0.5); border:1.5px solid rgba(255,255,255,0.18); border-radius:0.5rem; flex:1; padding-top:0.875rem; padding-bottom:0.875rem;';
+    tableField.classList.add('hidden');
+  }
+}
+
+function startSession() {
+  var name  = (document.getElementById('checkin-name').value  || '').trim();
+  var table = (document.getElementById('checkin-table').value || '').trim();
+  document.getElementById('checkin-name-error').classList.add('hidden');
+  document.getElementById('checkin-table-error').classList.add('hidden');
+  if (!name)  { document.getElementById('checkin-name-error').classList.remove('hidden');  document.getElementById('checkin-name').focus();  return; }
+  if (checkinType === 'dine-in' && !table) { document.getElementById('checkin-table-error').classList.remove('hidden'); document.getElementById('checkin-table').focus(); return; }
+  guestSession = { name: name, orderType: checkinType, tableNumber: checkinType === 'dine-in' ? table : null };
+  localStorage.setItem('deoscne_guest', JSON.stringify(guestSession));
+  updateSessionDisplay();
+  showView('menu');
+}
+
+function loadGuestSession() {
+  try { var s = localStorage.getItem('deoscne_guest'); if (s) guestSession = JSON.parse(s); } catch(e) {}
+}
+
+function updateSessionDisplay() {
+  if (!guestSession) return;
+  var typeLabel = guestSession.orderType === 'dine-in' ? guestSession.tableNumber : 'Takeaway';
+  var bar = document.getElementById('session-bar');
+  if (bar) {
+    bar.classList.remove('hidden');
+    bar.classList.add('flex');
+    document.getElementById('session-bar-text').textContent = guestSession.name + ' · ' + typeLabel;
+  }
+  var sName = document.getElementById('checkout-session-name');
+  var sType = document.getElementById('checkout-session-type');
+  if (sName) sName.textContent = guestSession.name;
+  if (sType) sType.textContent = guestSession.orderType === 'dine-in' ? guestSession.tableNumber : 'Takeaway';
+}
+
+function changeSession() {
+  if (guestSession) {
+    document.getElementById('checkin-name').value = guestSession.name;
+    setCheckinType(guestSession.orderType);
+    if (guestSession.tableNumber) document.getElementById('checkin-table').value = guestSession.tableNumber;
+  }
+  showView('checkin');
+}
+
+/* ── Order tracking state ── */
+var trackedOrderId     = null;
+var trackedOrderStatus = null;
+var trackedOrderData   = null;
+var unsubTracking      = null;
+
+/* ── Firebase init ── */
+firebase.initializeApp({
+  apiKey:            "AIzaSyA-zqCb8PQ3sNUNb1JpWGsCIIXZN5iHa6k",
+  authDomain:        "deos-cne.firebaseapp.com",
+  projectId:         "deos-cne",
+  storageBucket:     "deos-cne.firebasestorage.app",
+  messagingSenderId: "182538534673",
+  appId:             "1:182538534673:web:96f2b1974057ff700a56b0"
+});
+var db = firebase.firestore();
+
+/* ── View switching ── */
+function showView(name) {
+  /* Gate: menu requires a guest session */
+  if (name === 'menu' && !guestSession) { showView('checkin'); return; }
+
+  document.querySelectorAll('[data-view]').forEach(function(el) { el.classList.remove('active'); });
+  var target = document.querySelector('[data-view="' + name + '"]');
+  if (target) {
+    target.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(initFadeIns, 80);
+  }
+  if (name === 'checkout') { renderCheckout(); updateSessionDisplay(); }
+  /* Hide tracking bar on checkout & tracking views, show elsewhere if active order */
+  var tbar = document.getElementById('tracking-bar');
+  if (tbar && trackedOrderId) {
+    tbar.classList.toggle('hidden', name === 'tracking' || name === 'checkout');
+  }
+  /* Hide cart bar on non-menu views */
+  var cbar = document.getElementById('cart-bar');
+  if (cbar && name !== 'menu') {
+    cbar.classList.add('hidden');
+    cbar.classList.remove('flex');
+  }
+}
+
+/* ── Fade-ins ── */
+function initFadeIns() {
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) { entry.target.classList.add('visible'); io.unobserve(entry.target); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in:not(.visible)').forEach(function(el) { io.observe(el); });
+}
+document.addEventListener('DOMContentLoaded', initFadeIns);
+
+/* ── Nav drawer ── */
+function toggleNav() {
+  var drawer = document.getElementById('nav-drawer');
+  var overlay = document.getElementById('drawer-overlay');
+  drawer.classList.toggle('open');
+  overlay.classList.toggle('open');
+  document.body.style.overflow = drawer.classList.contains('open') ? 'hidden' : '';
+}
+
+/* ── Category tabs ── */
+document.querySelectorAll('#category-nav button[data-category]').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var alreadyActive = btn.classList.contains('border-b-2');
+    document.querySelectorAll('#category-nav button[data-category]').forEach(function(t) {
+      t.classList.remove('text-primary', 'border-b-2', 'border-primary');
+      t.classList.add('text-secondary');
+    });
+    if (alreadyActive) {
+      document.getElementById('menu-title').textContent    = 'Semua Menu';
+      document.getElementById('menu-subtitle').textContent = 'Pilihan Kami';
+      document.querySelectorAll('#menu-grid > div[data-category]').forEach(function(item) { item.style.display = 'flex'; });
+    } else {
+      btn.classList.remove('text-secondary');
+      btn.classList.add('text-primary', 'border-b-2', 'border-primary');
+      btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      document.getElementById('menu-title').textContent    = btn.dataset.title    || 'Menu';
+      document.getElementById('menu-subtitle').textContent = btn.dataset.subtitle || 'Pilihan Kami';
+      var cat = btn.dataset.category;
+      document.querySelectorAll('#menu-grid > div[data-category]').forEach(function(item) {
+        item.style.display = (item.dataset.category === cat) ? 'flex' : 'none';
+      });
+    }
+    var s = document.getElementById('menu-search');
+    if (s) s.value = '';
+  });
+});
+
+/* ── Search ── */
+document.getElementById('menu-search').addEventListener('input', function(e) {
+  var term = e.target.value.toLowerCase().trim();
+  var activeBtn = document.querySelector('#category-nav button.border-b-2');
+  var activeCat = activeBtn ? activeBtn.dataset.category : null;
+  document.querySelectorAll('#menu-grid > div[data-category]').forEach(function(item) {
+    if (!term) { item.style.display = (!activeCat || item.dataset.category === activeCat) ? 'flex' : 'none'; return; }
+    var title = (item.querySelector('h3') || {}).textContent || '';
+    var desc  = (item.querySelector('p')  || {}).textContent || '';
+    item.style.display = (title.toLowerCase().includes(term) || desc.toLowerCase().includes(term)) ? 'flex' : 'none';
+  });
+});
+
+/* ── Touch feedback ── */
+document.addEventListener('touchstart', function(e) {
+  var el = e.target.closest('button, a');
+  if (el) el.style.opacity = '0.75';
+}, { passive: true });
+document.addEventListener('touchend', function(e) {
+  var el = e.target.closest('button, a');
+  if (el) el.style.opacity = '';
+}, { passive: true });
+
+/* ═══════════════════════════════════
+   CART SYSTEM
+════════════════════════════════════ */
+var cart = [];
+var orderType = 'dine-in';
+
+/* Wire up "Tambah" buttons via event delegation */
+/* ── Item notes bottom sheet ── */
+var pendingItem = null; // { name, price, img, originBtn }
+
+document.getElementById('menu-grid').addEventListener('click', function(e) {
+  var btn = e.target.closest('.add-to-cart-btn');
+  if (!btn) return;
+  var card = btn.closest('[data-name]');
+  if (!card) return;
+  openItemSheet(card, btn);
+});
+
+function openItemSheet(card, btn) {
+  pendingItem = {
+    name:      card.dataset.name,
+    price:     parseInt(card.dataset.price, 10),
+    img:       card.dataset.img,
+    originBtn: btn
+  };
+  document.getElementById('item-sheet-img').src         = pendingItem.img;
+  document.getElementById('item-sheet-img').alt         = pendingItem.name;
+  document.getElementById('item-sheet-name').textContent  = pendingItem.name;
+  document.getElementById('item-sheet-price').textContent = formatRp(pendingItem.price) + ' / item';
+  document.getElementById('item-sheet-notes').value = '';
+  document.getElementById('item-sheet-overlay').classList.remove('hidden');
+  requestAnimationFrame(function() {
+    document.getElementById('item-sheet').style.transform = 'translateY(0)';
+  });
+  setTimeout(function() { document.getElementById('item-sheet-notes').focus(); }, 350);
+}
+
+function closeItemSheet() {
+  document.getElementById('item-sheet').style.transform = 'translateY(100%)';
+  setTimeout(function() {
+    document.getElementById('item-sheet-overlay').classList.add('hidden');
+    pendingItem = null;
+  }, 320);
+}
+
+function confirmAddToCart() {
+  if (!pendingItem) return;
+  var notes    = (document.getElementById('item-sheet-notes').value || '').trim();
+  var existing = cart.find(function(i) { return i.name === pendingItem.name; });
+  if (existing) {
+    existing.qty++;
+    if (notes) existing.notes = existing.notes ? existing.notes + ' · ' + notes : notes;
+  } else {
+    cart.push({ name: pendingItem.name, price: pendingItem.price, img: pendingItem.img, qty: 1, notes: notes });
+  }
+  updateCartBar();
+  /* Visual feedback on original button */
+  var btn = pendingItem.originBtn;
+  if (btn) {
+    var orig = btn.textContent;
+    btn.textContent = '✓ Ditambahkan';
+    btn.style.background = '#4a7c4a';
+    setTimeout(function() { btn.textContent = orig; btn.style.background = ''; }, 900);
+  }
+  closeItemSheet();
+}
+
+/* Enter key confirms from notes input */
+document.getElementById('item-sheet-notes').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') { e.preventDefault(); confirmAddToCart(); }
+});
+
+function updateCartBar() {
+  var total = cart.reduce(function(s, i) { return s + i.price * i.qty; }, 0);
+  var count = cart.reduce(function(s, i) { return s + i.qty; }, 0);
+  var cartBar = document.getElementById('cart-bar');
+  if (count > 0) {
+    cartBar.classList.remove('hidden');
+    cartBar.classList.add('flex');
+    document.getElementById('cart-count-label').textContent = count + ' Item';
+    document.getElementById('cart-total-label').textContent = formatRp(total);
+  } else {
+    cartBar.classList.add('hidden');
+    cartBar.classList.remove('flex');
+  }
+}
+
+function formatRp(amount) {
+  return 'Rp ' + amount.toLocaleString('id-ID');
+}
+
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function setOrderType(type) {
+  orderType = type;
+  var dinein   = document.getElementById('btn-dinein');
+  var takeaway = document.getElementById('btn-takeaway');
+  var tableField = document.getElementById('table-field');
+  if (type === 'dine-in') {
+    dinein.classList.add('bg-primary', 'text-on-primary'); dinein.classList.remove('text-primary');
+    takeaway.classList.remove('bg-primary', 'text-on-primary'); takeaway.classList.add('text-primary');
+    tableField.style.display = 'block';
+  } else {
+    takeaway.classList.add('bg-primary', 'text-on-primary'); takeaway.classList.remove('text-primary');
+    dinein.classList.remove('bg-primary', 'text-on-primary'); dinein.classList.add('text-primary');
+    tableField.style.display = 'none';
+  }
+}
+
+/* qty controls via event delegation */
+document.getElementById('checkout-items').addEventListener('click', function(e) {
+  var btn = e.target.closest('[data-action]');
+  if (!btn) return;
+  var name  = btn.dataset.name;
+  var delta = btn.dataset.action === 'inc' ? 1 : -1;
+  var item = cart.find(function(i) { return i.name === name; });
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) cart = cart.filter(function(i) { return i.name !== name; });
+  updateCartBar();
+  renderCheckout();
+});
+
+function renderCheckout() {
+  var container = document.getElementById('checkout-items');
+  var empty     = document.getElementById('checkout-empty');
+  var submitBtn = document.getElementById('submit-order-btn');
+  var total     = cart.reduce(function(s, i) { return s + i.price * i.qty; }, 0);
+  var count     = cart.reduce(function(s, i) { return s + i.qty; }, 0);
+
+  /* Show/hide existing order notice */
+  var hasActiveOrder = trackedOrderId && trackedOrderStatus && trackedOrderStatus !== 'paid';
+  var notice    = document.getElementById('existing-order-notice');
+  var noticeText = document.getElementById('existing-order-notice-text');
+  if (hasActiveOrder) {
+    notice.classList.remove('hidden');
+    noticeText.textContent = 'Order #' + trackedOrderId.slice(-6).toUpperCase()
+      + ' · ' + (TRACKING_STEPS[trackedOrderStatus] || {label:trackedOrderStatus}).label;
+    submitBtn.querySelector('span:last-child').textContent = 'Tambah ke Pesanan';
+  } else {
+    notice.classList.add('hidden');
+    submitBtn.querySelector('span:last-child').textContent = 'Konfirmasi Pesanan';
+  }
+
+  document.getElementById('checkout-count-badge').textContent = count > 0 ? count + ' item' : '';
+
+  if (cart.length === 0) {
+    container.innerHTML = '';
+    empty.classList.remove('hidden');
+    submitBtn.disabled = true;
+    submitBtn.classList.add('opacity-50');
+  } else {
+    empty.classList.add('hidden');
+    submitBtn.disabled = false;
+    submitBtn.classList.remove('opacity-50');
+    container.innerHTML = cart.map(function(item) {
+      var safeName = item.name.replace(/"/g, '&quot;');
+      return '<div class="py-3 border-b border-outline-variant/20">'
+        + '<div class="flex items-center gap-3">'
+        + '<img src="' + item.img + '" alt="' + safeName + '" class="w-14 h-14 object-cover rounded-sm shrink-0 bg-surface-container"/>'
+        + '<div class="flex-1 min-w-0">'
+        + '<p class="font-body-md text-sm text-primary leading-tight">' + item.name + '</p>'
+        + '<p class="font-label-sm text-[11px] text-secondary mt-0.5">' + formatRp(item.price) + ' / item</p>'
+        + '</div>'
+        + '<div class="flex items-center gap-2 shrink-0">'
+        + '<button data-action="dec" data-name="' + safeName + '" class="w-7 h-7 flex items-center justify-center bg-surface-container-high text-primary rounded-full font-bold text-base leading-none active:scale-90 transition-transform duration-100">−</button>'
+        + '<span class="font-label-sm text-label-sm text-primary w-5 text-center">' + item.qty + '</span>'
+        + '<button data-action="inc" data-name="' + safeName + '" class="w-7 h-7 flex items-center justify-center bg-primary text-on-primary rounded-full font-bold text-base leading-none active:scale-90 transition-transform duration-100">+</button>'
+        + '</div>'
+        + '</div>'
+        + '<input type="text" placeholder="Catatan untuk item ini... (opsional)" data-notes-for="' + safeName + '"'
+        + ' value="' + (item.notes || '').replace(/"/g, '&quot;') + '"'
+        + ' oninput="updateItemNotes(this.dataset.notesFor, this.value)"'
+        + ' class="w-full mt-2 bg-transparent text-[12px] text-secondary placeholder:text-outline/40 outline-none py-1.5"'
+        + ' style="border:none; border-bottom: 1px solid rgba(39,19,16,0.12); border-radius:0;"/>'
+        + '</div>';
+    }).join('');
+  }
+
+  document.getElementById('summary-subtotal').textContent = formatRp(total);
+  document.getElementById('summary-total').textContent    = formatRp(total);
+}
+
+function updateItemNotes(itemName, value) {
+  var item = cart.find(function(i) { return i.name === itemName; });
+  if (item) item.notes = value.trim();
+}
+
+function clearCartAndGoMenu() {
+  cart = [];
+  updateCartBar();
+  document.getElementById('order-success').classList.add('hidden');
+  showView('menu');
+}
+
+/* ═══════════════════════════════════
+   ORDER TRACKING
+════════════════════════════════════ */
+var TRACKING_STEPS = {
+  pending:    { color: '#d97706', label: 'Menunggu', text: 'Pesanan diterima, menunggu konfirmasi...' },
+  processing: { color: '#3b82f6', label: 'Diproses', text: 'Pesanan sedang diproses oleh dapur 🍳' },
+  done:       { color: '#f59e0b', label: 'Dihidangkan', text: 'Pesanan sudah dihidangkan ke meja kamu! 🍽️' },
+  paid:       { color: '#22c55e', label: 'Selesai', text: 'Terima kasih sudah mampir ke Deo\'s! ☕' }
+};
+
+function startOrderTracking(orderId) {
+  trackedOrderId = orderId;
+  localStorage.setItem('deoscne_order', orderId);
+  if (unsubTracking) { unsubTracking(); }
+  unsubTracking = db.collection('orders').doc(orderId)
+    .onSnapshot(function(doc) {
+      if (!doc.exists) return;
+      onTrackingUpdate(doc.id, doc.data());
+    });
+}
+
+function onTrackingUpdate(orderId, data) {
+  trackedOrderStatus = data.status;
+  trackedOrderData   = data;
+  var info = TRACKING_STEPS[data.status] || TRACKING_STEPS.pending;
+
+  /* Update tracking bar */
+  var tbar = document.getElementById('tracking-bar');
+  tbar.classList.remove('hidden');
+  tbar.style.borderTopColor = info.color;
+  document.getElementById('tracking-bar-dot').style.background = info.color;
+  document.getElementById('tracking-bar-status').textContent = info.label;
+  document.getElementById('tracking-bar-text').textContent   = info.text;
+
+  /* Hide tracking bar on checkout/tracking views */
+  var activeView = document.querySelector('[data-view].active');
+  var activeViewName = activeView ? activeView.dataset.view : '';
+  if (activeViewName === 'tracking' || activeViewName === 'checkout') {
+    tbar.classList.add('hidden');
+  }
+
+  /* Update tracking view */
+  document.getElementById('track-order-id').textContent      = 'Order #' + orderId.slice(-6).toUpperCase();
+  document.getElementById('track-customer-name').textContent = data.customerName || '—';
+  document.getElementById('track-order-type').textContent    = data.orderType === 'dine-in'
+    ? 'Dine-in · ' + (data.tableNumber || 'Meja') : 'Takeaway';
+
+  /* Progress stepper */
+  var steps   = ['pending', 'processing', 'done', 'paid'];
+  var current = steps.indexOf(data.status);
+  steps.forEach(function(s, i) {
+    var el   = document.getElementById('step-' + s);
+    var done = i <= current;
+    el.style.background = done ? TRACKING_STEPS[s].color : '#3a2418';
+    el.querySelector('.material-symbols-outlined').style.opacity = done ? '1' : '0.25';
+    if (i < steps.length - 1) {
+      var line = document.getElementById('line-' + (i + 1));
+      if (line) line.style.background = (i < current) ? '#4a7c4a' : '#3a2418';
+    }
+  });
+
+  /* Status message */
+  var msgBox = document.getElementById('track-status-msg');
+  msgBox.style.background = info.color + '1a';
+  msgBox.style.borderColor = info.color + '4d';
+  document.getElementById('track-status-text').textContent = info.text;
+
+  /* Items */
+  var itemsEl = document.getElementById('track-items');
+  itemsEl.innerHTML = (data.items || []).map(function(item) {
+    return '<div class="flex justify-between items-start">'
+      + '<span class="font-body-md text-sm text-on-surface">' + item.qty + 'x ' + escHtml(item.name) + '</span>'
+      + '<span class="font-body-md text-sm text-secondary shrink-0 ml-3">' + formatRp(item.subtotal) + '</span>'
+      + '</div>';
+  }).join('');
+
+  /* Total */
+  document.getElementById('track-total').textContent = formatRp(data.total || 0);
+
+  /* Notes */
+  if (data.notes) {
+    document.getElementById('track-notes').textContent = '📝 ' + data.notes;
+    document.getElementById('track-notes-section').classList.remove('hidden');
+  }
+
+  /* Done CTA */
+  if (data.status === 'paid') {
+    document.getElementById('track-done-cta').classList.remove('hidden');
+  }
+}
+
+function clearTracking() {
+  if (unsubTracking) { unsubTracking(); unsubTracking = null; }
+  trackedOrderId = null;
+  localStorage.removeItem('deoscne_order');
+  document.getElementById('tracking-bar').classList.add('hidden');
+  document.getElementById('track-done-cta').classList.add('hidden');
+  cart = [];
+  updateCartBar();
+  showView('menu');
+}
+
+/* Re-connect tracking + guest session on page load */
+document.addEventListener('DOMContentLoaded', function() {
+  loadGuestSession();
+  updateSessionDisplay();
+  var savedId = localStorage.getItem('deoscne_order');
+  if (savedId) startOrderTracking(savedId);
+});
+
+/* ── Submit order to Firestore ── */
+function submitOrder() {
+  if (cart.length === 0) return;
+
+  var hasActiveOrder = trackedOrderId && trackedOrderStatus && trackedOrderStatus !== 'paid';
+
+  if (!guestSession) { showView('checkin'); return; }
+
+  var btn = document.getElementById('submit-order-btn');
+  btn.innerHTML = '<span class="material-symbols-outlined spin">progress_activity</span><span class="font-label-sm text-label-sm uppercase tracking-wider ml-2">Mengirim...</span>';
+  btn.disabled  = true;
+
+  var newItems = cart.map(function(i) { return { name: i.name, price: i.price, qty: i.qty, subtotal: i.price * i.qty, notes: i.notes || '', served: false }; });
+
+  var promise;
+  if (hasActiveOrder) {
+    /* ── Append to existing order ── */
+    promise = appendToOrder(trackedOrderId, newItems);
+  } else {
+    /* ── Create new order ── */
+    var total = newItems.reduce(function(s, i) { return s + i.subtotal; }, 0);
+    promise = db.collection('orders').add({
+      customerName: guestSession.name,
+      orderType:    guestSession.orderType,
+      tableNumber:  guestSession.tableNumber,
+      items:        newItems,
+      total:        total,
+      status:       'pending',
+      createdAt:    firebase.firestore.FieldValue.serverTimestamp()
+    }).then(function(docRef) {
+      startOrderTracking(docRef.id);
+      return { id: docRef.id };
+    });
+  }
+
+  promise
+    .then(function(result) {
+      var displayId = hasActiveOrder ? trackedOrderId : (result && result.id ? result.id : trackedOrderId);
+      document.getElementById('success-order-id').textContent = 'Order #' + displayId.slice(-6).toUpperCase();
+      document.getElementById('order-success').classList.remove('hidden');
+    })
+    .catch(function(err) {
+      console.error(err);
+      alert('Gagal mengirim pesanan. Periksa koneksi internet dan coba lagi.');
+    })
+    .finally(function() {
+      btn.innerHTML = '<span class="material-symbols-outlined" style="font-variation-settings:\'FILL\' 1;">check_circle</span><span class="font-label-sm text-label-sm uppercase tracking-wider">Konfirmasi Pesanan</span>';
+      btn.disabled  = false;
+    });
+}
+
+/* ── Merge item arrays (same name → tambah qty) ── */
+function mergeItems(existing, newItems) {
+  var merged = existing.map(function(i) { return Object.assign({}, i); });
+  newItems.forEach(function(newItem) {
+    var found = merged.find(function(i) { return i.name === newItem.name; });
+    if (found) {
+      found.qty     += newItem.qty;
+      found.subtotal = found.price * found.qty;
+      if (newItem.notes) found.notes = found.notes ? found.notes + ' · ' + newItem.notes : newItem.notes;
+    } else {
+      merged.push(Object.assign({}, newItem));
+    }
+  });
+  return merged;
+}
+
+/* ── Append items to existing Firestore order ── */
+function appendToOrder(orderId, newItems) {
+  return db.collection('orders').doc(orderId).get()
+    .then(function(doc) {
+      if (!doc.exists) throw new Error('Order tidak ditemukan');
+      var existing = doc.data();
+      var merged   = mergeItems(existing.items || [], newItems);
+      var newTotal = merged.reduce(function(s, i) { return s + i.subtotal; }, 0);
+      /* Only notify kitchen (reset to pending) if order was fully served — otherwise
+         preserve current status so processing orders don't jump back to pending */
+      var newStatus = (existing.status === 'done' || existing.status === 'paid')
+        ? 'pending'
+        : existing.status;
+      return db.collection('orders').doc(orderId).update({
+        items:     merged,
+        total:     newTotal,
+        status:    newStatus,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    });
+}
+</script>
+</body>
+</html>
